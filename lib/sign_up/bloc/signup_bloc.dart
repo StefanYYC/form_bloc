@@ -2,12 +2,20 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:onbricolemobile/models/user/user.dart';
+import 'package:onbricolemobile/repositories/user_repository.dart';
 
 part 'signup_event.dart';
 
 part 'signup_state.dart';
 
 class SignupBloc extends Bloc<SignupEvent, SignupState> {
+
+  final UserRepository _userRepository;
+
+  SignupBloc(UserRepository userRepository)
+      : assert(userRepository != null),
+        _userRepository = userRepository;
+
   @override
   SignupState get initialState => SignupState();
 
@@ -30,11 +38,12 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     } else if (event is SignupStepCancelled) {
       yield _mapSignupCancelStepToState(event, state);
     } else if (event is SignupActivateNotifications) {
-      yield _mapSignupNotificationsChangedToState(event,state);
+      yield _mapSignupNotificationsChangedToState(event, state);
     }
   }
 
   // -- Vérification des textfields -- //
+
 
   // Notifications
   SignupState _mapSignupNotificationsChangedToState(
@@ -46,10 +55,8 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
   }
 
   // Mail
-  SignupState _mapSignupMailChangedToState(
-    SignupMailChanged event,
-    SignupState state,
-  ) {
+  SignupState _mapSignupMailChangedToState(SignupMailChanged event,
+      SignupState state,) {
     final validMail = _isMailValid(event.mail);
     return state.copyWith(
       compteStatus: validMail ? StepStatus.valid : StepStatus.invalid,
@@ -58,10 +65,8 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
   }
 
   // Mdp
-  SignupState _mapPasswordChangedToState(
-    SignupMdpChanged event,
-    SignupState state,
-  ) {
+  SignupState _mapPasswordChangedToState(SignupMdpChanged event,
+      SignupState state,) {
     final validMdp = _isPasswordValid(event.mdp);
     return state.copyWith(
       compteStatus: validMdp ? StepStatus.valid : StepStatus.invalid,
@@ -70,10 +75,8 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     );
   }
 
-  SignupState _mapPasswordConfirmChangedToState(
-    SignupMdpConfirmChanged event,
-    SignupState state,
-  ) {
+  SignupState _mapPasswordConfirmChangedToState(SignupMdpConfirmChanged event,
+      SignupState state,) {
     final validMdp = _isPasswordValid(event.mdpConfirm);
     return state.copyWith(
       confirmPassword: event.mdpConfirm,
@@ -83,10 +86,8 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
   }
 
   // Prenom
-  SignupState _mapSignupPrenomChangedToState(
-    SignupPrenomChanged event,
-    SignupState state,
-  ) {
+  SignupState _mapSignupPrenomChangedToState(SignupPrenomChanged event,
+      SignupState state,) {
     final validPrenom = _areNamesValid(event.prenom);
     return state.copyWith(
       infomationsStatus: validPrenom ? StepStatus.valid : StepStatus.invalid,
@@ -95,10 +96,8 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
   }
 
   // Nom
-  SignupState _mapSignupNomChangedToState(
-    SignupNomChanged event,
-    SignupState state,
-  ) {
+  SignupState _mapSignupNomChangedToState(SignupNomChanged event,
+      SignupState state,) {
     final validNom = _areNamesValid(event.nom);
     return state.copyWith(
       infomationsStatus: validNom ? StepStatus.valid : StepStatus.invalid,
@@ -107,21 +106,19 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
   }
 
   // Code postal
-  SignupState _mapCodePostalChangedToState(
-    SignupCodePostalChanged event,
-    SignupState state,
-  ) {
+  SignupState _mapCodePostalChangedToState(SignupCodePostalChanged event,
+      SignupState state,) {
     final validCodePostal = _isPostalCodeValid(event.codePostal);
     return state.copyWith(
       infomationsStatus:
-          validCodePostal ? StepStatus.valid : StepStatus.invalid,
+      validCodePostal ? StepStatus.valid : StepStatus.invalid,
       user: state.user.copyWith(codePostal: event.codePostal),
     );
   }
 
   // Do the redirections between the steps and set it to complete
-  SignupState _mapSignupStepCompletedToState(
-      SignupStepCompleted event, SignupState state) {
+  SignupState _mapSignupStepCompletedToState(SignupStepCompleted event,
+      SignupState state) {
     switch (state.step) {
       case SignupStep.compte:
         return state.copyWith(step: SignupStep.informations);
@@ -131,15 +128,15 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
         break;
       case SignupStep.notifications:
         return state.copyWith(complete: true);
-      // Should never happens
+    // Should never happens
       default:
         return state;
     }
   }
 
   // In case user press cancel to go back to the previous page
-  SignupState _mapSignupCancelStepToState(
-      SignupStepCancelled event, SignupState state) {
+  SignupState _mapSignupCancelStepToState(SignupStepCancelled event,
+      SignupState state) {
     switch (state.step) {
       case SignupStep.compte:
         return state.copyWith();
@@ -162,7 +159,8 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
   // Controller for mail
   bool _isMailValid(String mail) {
     if (mail.isNotEmpty &&
-        !RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+        !RegExp(
+            r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
             .hasMatch(mail)) {
       return false;
     }

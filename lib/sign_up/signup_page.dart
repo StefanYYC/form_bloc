@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:onbricolemobile/login/login_page.dart';
 import 'package:onbricolemobile/models/user/user.dart';
+import 'package:onbricolemobile/repositories/user_repository.dart';
 import 'package:onbricolemobile/sign_up/bloc/signup_bloc.dart';
 
 class SignupPage extends StatefulWidget {
@@ -11,7 +12,7 @@ class SignupPage extends StatefulWidget {
   static Route<User> route() {
     return MaterialPageRoute<User>(
       builder: (_) => BlocProvider(
-        create: (_) => SignupBloc(),
+        create: (context) => SignupBloc(context.repository<UserRepository>()),
         child: const SignupPage._(),
       ),
     );
@@ -24,7 +25,7 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  SignupNotifications _notifications = SignupNotifications.off;
+  SignupNotifications _notifications = SignupNotifications.empty;
 
   @override
   Widget build(BuildContext context) {
@@ -243,6 +244,7 @@ class _SignupPageState extends State<SignupPage> {
                                       BorderSide(color: Colors.transparent)),
                             ),
                             autovalidate: true,
+                            key: Key('prenom'),
                             validator: (_) =>
                                 state.informationsStatus == StepStatus.invalid
                                     ? 'Entrez un prénom valide.'
@@ -296,6 +298,7 @@ class _SignupPageState extends State<SignupPage> {
                                   borderSide:
                                       BorderSide(color: Colors.transparent)),
                             ),
+                            key: Key('codePostal'),
                             autovalidate: true,
                             validator: (_) =>
                                 state.informationsStatus == StepStatus.invalid

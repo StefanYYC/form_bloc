@@ -61,3 +61,6 @@ class SignupStepCompleted extends SignupEvent{}
 
 // To come back during the sign up process
 class SignupStepCancelled extends SignupEvent{}
+
+// When we submit the form
+class SignupStepSubmitted extends SignupEvent{}

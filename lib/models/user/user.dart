@@ -10,6 +10,8 @@ class User {
   final String prenom;
   final String email;
   final String codePostal;
+  final String ville;
+  final String phoneNumber;
   final String pass;
   final SignupNotifications notifications;
 
@@ -17,6 +19,8 @@ class User {
     this.username,
     this.nom,
     this.prenom,
+    this.ville,
+    this.phoneNumber,
     this.email,
     this.codePostal,
     this.pass,
@@ -26,18 +30,13 @@ class User {
   @override
   String toString() => 'User ($username, $nom, $prenom)';
 
-  //User({this.id, this.nom, this.pass, this.codePostal, this.email, this.prenom, this.notifications, this.name});
-  /*
-  // Factory indique que cette fonctionne retourne une valeur venant d'une fonction (ici UserFromJson)
-  factory User.fromJson(Map<String, dynamic> json) =>
-     _$UserFromJson(json);   
-  */
-
   User copyWith({
     final String username,
     final String nom,
     final String prenom,
     final String email,
+    final String phoneNumber,
+    final String ville,
     final String codePostal,
     final String pass,
     final SignupNotifications notifications,
@@ -48,6 +47,8 @@ class User {
       prenom ?? this.prenom,
       email ?? this.email,
       pass ?? this.pass,
+      ville ?? this.ville,
+      phoneNumber ?? this.phoneNumber,
       codePostal ?? this.codePostal,
       notifications ?? this.notifications,
     );

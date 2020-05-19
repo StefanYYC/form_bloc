@@ -6,9 +6,6 @@ enum SignupNotifications { empty, on, off}
 
 @immutable
 class SignupState {
-  final StepStatus emailStatus;
-  final StepStatus pwdStatus;
-  final StepStatus pwdConfirmStatus;
   final User user;
   final SignupStep step;
   final StepStatus compteStatus;
@@ -24,9 +21,6 @@ class SignupState {
     this.compteStatus = StepStatus.empty,
     this.informationsStatus = StepStatus.empty,
     this.notificationsStatus = StepStatus.empty,
-    this.emailStatus = StepStatus.empty,
-    this.pwdConfirmStatus = StepStatus.empty,
-    this.pwdStatus = StepStatus.empty,
     this.complete = false,
     this.password = "",
     this.confirmPassword = "",
@@ -56,9 +50,6 @@ class SignupState {
       complete: complete ?? this.complete,
       password: password ?? this.password,
       confirmPassword: confirmPassword ?? this.confirmPassword,
-      emailStatus: emailStatus ?? this.emailStatus,
-      pwdConfirmStatus: pwdConfirmStatus ?? this.pwdConfirmStatus,
-      pwdStatus: pwdStatus ?? this.pwdStatus,
     );
   }
 }

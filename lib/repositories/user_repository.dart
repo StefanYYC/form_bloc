@@ -46,12 +46,17 @@ class UserRepository {
 
   // Signup
   Future<void> signUp(
-      {@required String prenom,
+      {@required String username,
+      @required String prenom,
       @required String nom,
       @required String pass,
+      @required String email,
+      @required String phoneNumber,
+      @required String ville,
       @required String codePostal,
       @required SignupNotifications notifications}) async {
-    await _drupalApiClient.signUp(prenom, nom, codePostal, pass, notifications);
+    await _drupalApiClient.signUp(username, email, prenom, nom, pass, ville,
+        phoneNumber, codePostal, notifications);
   }
 
   // Get user anywhere
@@ -64,7 +69,6 @@ class UserRepository {
         nom: "Speter",
         username: "stefan",
         email: "stefan@admin.fr",
-        codePostal: "59000"
-    );
+        codePostal: "59000");
   }
 }
