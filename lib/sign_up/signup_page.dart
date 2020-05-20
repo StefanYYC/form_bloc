@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_form_bloc/flutter_form_bloc.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:onbricolemobile/login/login_page.dart';
 import 'package:onbricolemobile/models/user/user.dart';
 import 'package:onbricolemobile/repositories/user_repository.dart';
@@ -106,6 +106,42 @@ class _SignupPageState extends State<SignupPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
+                          Text(
+                            'Username',
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 17),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          InternationalPhoneNumberInput(
+                            countrySelectorScrollControlled: false,
+                            countries: ['FR'],
+                            inputDecoration: InputDecoration(
+                              hintText: "Phone number",
+                              hintStyle: TextStyle(
+                                  fontSize: 14, color: Colors.blueGrey),
+                              fillColor: Color(0xffccf5ff),
+                              filled: true,
+                              border: InputBorder.none,
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                  BorderSide(color: Colors.transparent)),
+                            ),
+                            autoValidate: true,
+                            errorMessage: '',
+                            onInputValidated: (_) => state.compteStatus ==
+                                StepStatus.invalid
+                                ? 'Entrez une adresse sous la forme "example@mail.com".'
+                                : null,
+                            onInputChanged: (phoneNumber) {
+                              print(phoneNumber.toString());
+                              context
+                                  .bloc<SignupBloc>()
+                                  .add(SignupPhoneNumberChanged(phoneNumber.toString()));
+                            },
+                          ),
                           Text(
                             'MAIL',
                             textAlign: TextAlign.start,

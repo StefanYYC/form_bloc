@@ -31,7 +31,7 @@ dependencies:
   bloc: ^4.0.0
   dartz: ^0.8.9
   fresh: ^0.0.1
-  flutter_form_bloc: ^0.14.0
+  intl_phone_number_input: ^0.4.1+1
 
 dev_dependencies:
   flutter_test:

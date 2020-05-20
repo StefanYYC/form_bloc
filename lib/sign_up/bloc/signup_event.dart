@@ -15,6 +15,13 @@ class SignupMailChanged extends SignupEvent{
   const SignupMailChanged(this.mail);
 }
 
+// Username
+class SignupUsernameChanged extends SignupEvent{
+  final String username;
+
+  const SignupUsernameChanged(this.username);
+}
+
 // Mot de passe 1
 class SignupMdpChanged extends SignupEvent{
   final String mdp;
@@ -40,6 +47,20 @@ class SignupNomChanged extends SignupEvent{
   final String nom;
 
   const SignupNomChanged(this.nom);
+}
+
+// Ville
+class SignupVilleChanged extends SignupEvent{
+  final String ville;
+
+  const SignupVilleChanged(this.ville);
+
+}
+// Phone number
+class SignupPhoneNumberChanged extends SignupEvent{
+  final String phoneNumber;
+
+  const SignupPhoneNumberChanged(this.phoneNumber);
 }
 
 // Code postal

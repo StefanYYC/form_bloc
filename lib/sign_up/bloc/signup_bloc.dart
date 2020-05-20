@@ -9,7 +9,6 @@ part 'signup_event.dart';
 part 'signup_state.dart';
 
 class SignupBloc extends Bloc<SignupEvent, SignupState> {
-
   final UserRepository _userRepository;
 
   SignupBloc(UserRepository userRepository)
@@ -44,7 +43,6 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
 
   // -- Vérification des textfields -- //
 
-
   // Notifications
   SignupState _mapSignupNotificationsChangedToState(
       SignupActivateNotifications event, SignupState state) {
@@ -55,8 +53,10 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
   }
 
   // Mail
-  SignupState _mapSignupMailChangedToState(SignupMailChanged event,
-      SignupState state,) {
+  SignupState _mapSignupMailChangedToState(
+    SignupMailChanged event,
+    SignupState state,
+  ) {
     final validMail = _isMailValid(event.mail);
     return state.copyWith(
       compteStatus: validMail ? StepStatus.valid : StepStatus.invalid,
@@ -64,9 +64,37 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     );
   }
 
+  // Username
+  SignupState _mapSignupUsernameChangedToState(
+    SignupUsernameChanged event,
+    SignupState state,
+  ) {
+    final validUsername = _isUsernameValid(event.username);
+    return state.copyWith(
+      compteStatus: validUsername ? StepStatus.valid : StepStatus.invalid,
+      user: state.user.copyWith(username: event.username),
+    );
+  }
+
+  // Phone Number
+  SignupState _mapSignupPhoneNumberChangedToState(
+    SignupPhoneNumberChanged event,
+    SignupState state,
+  ) {
+    final validPhoneNumber = _isPhoneNumberValid(event.phoneNumber);
+    return state.copyWith(
+      compteStatus: validPhoneNumber ? StepStatus.valid : StepStatus.invalid,
+      user: state.user.copyWith(phoneNumber: event.phoneNumber),
+    );
+  }
+
+
+
   // Mdp
-  SignupState _mapPasswordChangedToState(SignupMdpChanged event,
-      SignupState state,) {
+  SignupState _mapPasswordChangedToState(
+    SignupMdpChanged event,
+    SignupState state,
+  ) {
     final validMdp = _isPasswordValid(event.mdp);
     return state.copyWith(
       compteStatus: validMdp ? StepStatus.valid : StepStatus.invalid,
@@ -75,8 +103,10 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     );
   }
 
-  SignupState _mapPasswordConfirmChangedToState(SignupMdpConfirmChanged event,
-      SignupState state,) {
+  SignupState _mapPasswordConfirmChangedToState(
+    SignupMdpConfirmChanged event,
+    SignupState state,
+  ) {
     final validMdp = _isPasswordValid(event.mdpConfirm);
     return state.copyWith(
       confirmPassword: event.mdpConfirm,
@@ -86,8 +116,10 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
   }
 
   // Prenom
-  SignupState _mapSignupPrenomChangedToState(SignupPrenomChanged event,
-      SignupState state,) {
+  SignupState _mapSignupPrenomChangedToState(
+    SignupPrenomChanged event,
+    SignupState state,
+  ) {
     final validPrenom = _areNamesValid(event.prenom);
     return state.copyWith(
       infomationsStatus: validPrenom ? StepStatus.valid : StepStatus.invalid,
@@ -96,8 +128,10 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
   }
 
   // Nom
-  SignupState _mapSignupNomChangedToState(SignupNomChanged event,
-      SignupState state,) {
+  SignupState _mapSignupNomChangedToState(
+    SignupNomChanged event,
+    SignupState state,
+  ) {
     final validNom = _areNamesValid(event.nom);
     return state.copyWith(
       infomationsStatus: validNom ? StepStatus.valid : StepStatus.invalid,
@@ -106,19 +140,21 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
   }
 
   // Code postal
-  SignupState _mapCodePostalChangedToState(SignupCodePostalChanged event,
-      SignupState state,) {
+  SignupState _mapCodePostalChangedToState(
+    SignupCodePostalChanged event,
+    SignupState state,
+  ) {
     final validCodePostal = _isPostalCodeValid(event.codePostal);
     return state.copyWith(
       infomationsStatus:
-      validCodePostal ? StepStatus.valid : StepStatus.invalid,
+          validCodePostal ? StepStatus.valid : StepStatus.invalid,
       user: state.user.copyWith(codePostal: event.codePostal),
     );
   }
 
   // Do the redirections between the steps and set it to complete
-  SignupState _mapSignupStepCompletedToState(SignupStepCompleted event,
-      SignupState state) {
+  SignupState _mapSignupStepCompletedToState(
+      SignupStepCompleted event, SignupState state) {
     switch (state.step) {
       case SignupStep.compte:
         return state.copyWith(step: SignupStep.informations);
@@ -128,15 +164,15 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
         break;
       case SignupStep.notifications:
         return state.copyWith(complete: true);
-    // Should never happens
+      // Should never happens
       default:
         return state;
     }
   }
 
   // In case user press cancel to go back to the previous page
-  SignupState _mapSignupCancelStepToState(SignupStepCancelled event,
-      SignupState state) {
+  SignupState _mapSignupCancelStepToState(
+      SignupStepCancelled event, SignupState state) {
     switch (state.step) {
       case SignupStep.compte:
         return state.copyWith();
@@ -159,9 +195,26 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
   // Controller for mail
   bool _isMailValid(String mail) {
     if (mail.isNotEmpty &&
-        !RegExp(
-            r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+        !RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
             .hasMatch(mail)) {
+      return false;
+    }
+    return true;
+  }
+
+  // Controller for username
+  bool _isUsernameValid(String username) {
+    if (username.isNotEmpty) {
+      // delete all spaces
+      username.replaceAll(new RegExp(r"\s\b|\b\s"), "");
+      return false;
+    }
+    return true;
+  }
+
+  // Controller for phone number
+  bool _isPhoneNumberValid(String phoneNumber) {
+    if (phoneNumber.isNotEmpty) {
       return false;
     }
     return true;
